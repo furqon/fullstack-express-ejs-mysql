@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+<div class="container mt-4">
+  <h1><%= blog ? 'Edit Post' : 'Add New Post' %></h1>
+  <form action="<%= blog ? '/edit/' + blog.id : '/add' %>" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title" value="<%= blog ? blog.title : '' %>" required>
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">Content</label>
+      <div id="editor" style="height: 200px;"><%= blog ? blog.content : '' %></div>
+      <input type="hidden" id="content" name="content">
+    </div>
+    <div class="mb-3">
+      <label for="image" class="form-label">Image</label>
+      <input type="file" class="form-control" id="image" name="image" accept="image/*">
+      <% if (blog && blog.image) { %>
+        <img src="<%= blog.image %>" alt="Current Image" style="max-width: 200px;" class="mt-2">
+        <input type="hidden" name="existingImage" value="<%= blog.image %>">
+      <% } %>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+  var quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        ['link', 'image'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+  document.querySelector('form').onsubmit = function() {
+    document.querySelector('#content').value = quill.root.innerHTML;
+  };
+</script>
+<%- include('partials/footer') %>

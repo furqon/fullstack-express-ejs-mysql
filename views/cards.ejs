@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+<div class="container mt-4">
+  <h1>Blog Posts</h1>
+  <a href="/add" class="btn btn-primary mb-3">Add New Post</a>
+  <a href="/" class="btn btn-secondary mb-3">View as Table</a>
+  
+  <div class="row">
+    <% blogs.forEach(blog => { %>
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <% if (blog.image) { %>
+            <img src="<%= blog.image %>" class="card-img-top" alt="Blog Image" style="height: 200px; object-fit: cover;">
+          <% } %>
+          <div class="card-body">
+            <h5 class="card-title"><%= blog.title %></h5>
+            <p class="card-text"><%= blog.content.replace(/<[^>]+>/g, '').substring(0, 100) %>...</p>
+            <p class="card-text"><small class="text-muted"><%= blog.created_at %></small></p>
+            <a href="/edit/<%= blog.id %>" class="btn btn-sm btn-warning">Edit</a>
+            <form action="/delete/<%= blog.id %>" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+<%- include('partials/footer') %>
